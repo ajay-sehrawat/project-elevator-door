@@ -1,0 +1,19 @@
+idf_component_register(
+    SRCS
+        "app_main.c"
+        "hal/hal_uart_mock.c"
+        "dispatcher/event_dispatcher.c"
+        "fsm/door_fsm.c"
+        "safety/safety_monitor.c"
+        "logger/event_logger.c"
+        "nvs/fault_nvs.c"
+    INCLUDE_DIRS
+        "."
+        "../include"
+    REQUIRES
+        freertos
+        driver
+        nvs_flash
+        esp_timer
+        esp_system
+)
