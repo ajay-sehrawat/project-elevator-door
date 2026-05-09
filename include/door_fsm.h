@@ -1,13 +1,3 @@
-/**
- * @file door_fsm.h
- * @brief Door control Finite State Machine public interface.
- *
- * The FSM runs exclusively inside the ControlTask (Core 1, Priority 4).
- * All external reads of the FSM state go through fsm_get_state() which
- * acquires the FSM mutex — direct struct reads from other tasks are forbidden
- * (NFR-6).
- */
-
 #ifndef DOOR_FSM_H
 #define DOOR_FSM_H
 

@@ -1,24 +1,3 @@
-/**
- * @file hal.h
- * @brief Hardware Abstraction Layer public interface.
- *
- * ARCHITECTURAL MANDATE (from description.md §2):
- *   "The application layer must never interact directly with peripheral
- *    registers. All inputs/outputs pass through a cleanly defined HAL."
- *
- * This header defines the ONLY surface through which the application touches
- * hardware.  Swapping the mock UART implementation for real GPIO/I2C/SPI
- * sensors requires only a different .c file implementing these functions —
- * zero changes to FSM, Safety, or Dispatcher code.
- *
- * Actuator interface: The HAL exposes three named actuator calls so that the
- * FSM never writes to a GPIO register directly.
- *
- * TX interface: State feedback strings are handed to hal_tx_enqueue() which
- * puts them on the UART TX queue.  The HAL TX task drains that queue with
- * backpressure handling (NFR-5).
- */
-
 #ifndef HAL_H
 #define HAL_H
 

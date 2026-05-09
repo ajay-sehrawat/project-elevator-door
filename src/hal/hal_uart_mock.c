@@ -1,27 +1,3 @@
-/**
- * @file hal/hal_uart_mock.c
- * @brief Hardware Abstraction Layer — UART Mock Implementation.
- *
- * This file is the ONLY place in the codebase that knows UART frames exist.
- * It:
- *  1. Reads raw ASCII frames from UART0 (the Supervisor simulation channel).
- *  2. Validates each frame with CRC-8 (NFR-5).
- *  3. Runs a debounce state machine on every sensor signal (SR-3).
- *  4. Cross-checks sensors for Single Point of Failure conditions (SR-3).
- *  5. Translates valid frames into typed system_event_t structs.
- *  6. Pushes events to the central Dispatcher queue.
- *
- * To swap to real hardware (GPIO/I2C/SPI), replace this file only.
- * All code above the HAL is unaffected.
- *
- * Power Management Note:
- *   The ESP32 light-sleep mode would gate the UART clock and drop frames.
- *   We therefore remain in Active mode during normal operation.  If power
- *   optimisation is required in future, the correct approach is to use the
- *   ESP-IDF uart_set_wakeup_threshold() API and enable uart wakeup source
- *   before entering light-sleep — never modem-sleep during an active session.
- */
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

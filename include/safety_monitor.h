@@ -1,16 +1,3 @@
-/**
- * @file safety_monitor.h
- * @brief Safety Monitor task — highest-priority watchdog over FSM & sensors.
- *
- * Responsibilities:
- *  - Feeds the ESP32 Hardware Task Watchdog Timer (TWDT) every TWDT_FEED_INTERVAL_MS.
- *  - Independently enforces SR-1 (obstruction), SR-3 (SPOF), SR-5 (comms timeout).
- *  - Injects synthetic events (EVT_MOTOR_STALL, EVT_COMM_TIMEOUT, EVT_SPOF_DETECTED)
- *    into the Dispatcher queue so the FSM handles them uniformly.
- *  - Never directly mutates FSM state — it enqueues events. This maintains the
- *    single-writer principle for the FSM mutex.
- */
-
 #ifndef SAFETY_MONITOR_H
 #define SAFETY_MONITOR_H
 

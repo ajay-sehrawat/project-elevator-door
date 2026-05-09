@@ -1,12 +1,3 @@
-/**
- * @file fault_nvs.h
- * @brief Non-Volatile Storage interface for fault persistence (NFR-3, SR-4).
- *
- * Fatal faults are written to NVS immediately upon detection.  On every boot,
- * app_main reads NVS before creating tasks; if a persisted fault is found the
- * FSM boots directly into FAULT state (SR-4).
- */
-
 #ifndef FAULT_NVS_H
 #define FAULT_NVS_H
 

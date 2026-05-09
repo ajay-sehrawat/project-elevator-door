@@ -1,25 +1,3 @@
-/**
- * @file safety/safety_monitor.c
- * @brief Safety Monitor — highest-priority task on Core 1.
- *
- * Responsibilities enforced independently of the FSM:
- *   SR-1  Obstruction must halt/reverse door motion.
- *   SR-2  Obstruction reaction within OBSTRUCTION_REACT_MS.
- *   SR-3  SPOF cross-check (contradictory sensors → FAULT).
- *   SR-5  Communication timeout within COMM_TIMEOUT_MS.
- *   SR-7  The Safety Monitor does NOT duplicate stall detection — that is
- *         handled by the FSM's esp_timer callback to avoid redundancy.
- *
- * The Safety Monitor NEVER mutates FSM state directly.
- * It enqueues typed events to the Dispatcher queue.  The FSM, running at the
- * same priority (4) on the same core (1), processes them in turn.
- * This single-writer pattern eliminates concurrent writes to s_fsm_ctx.
- *
- * TWDT: The Safety Monitor feeds the ESP32 Hardware Task Watchdog every
- * TWDT_FEED_INTERVAL_MS.  If this task ever hangs, the hardware TWDT fires
- * and resets the ESP32, guaranteeing a fail-safe restart.
- */
-
 #include <stdatomic.h>
 
 #include "freertos/FreeRTOS.h"

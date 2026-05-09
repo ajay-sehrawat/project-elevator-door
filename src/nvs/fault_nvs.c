@@ -1,17 +1,3 @@
-/**
- * @file nvs/fault_nvs.c
- * @brief NVS (Non-Volatile Storage) interface for fatal fault persistence.
- *
- * NFR-3: Fatal faults must survive power loss.  On boot, app_main reads NVS;
- * if a fault is found, the FSM boots directly into FAULT state (SR-4).
- *
- * NVS API calls are synchronous and relatively slow (flash erase cycles).
- * They are called only on state transitions, never in hot loops.
- * This is safe because NVS writes happen in the FSM task (Core 1, Priority 4),
- * and the Safety task (Priority 5) on the same core will preempt if needed.
- * The Safety task does not call NVS — it only reads atomic sensor variables.
- */
-
 #include <string.h>
 
 #include "nvs_flash.h"

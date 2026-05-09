@@ -1,15 +1,3 @@
-/**
- * @file system_event.h
- * @brief Generic event type that flows through the entire system.
- *
- * ARCHITECTURAL MANDATE: This is the ONLY inter-layer data contract.
- * The HAL produces events of this type; the Dispatcher routes them;
- * the FSM and Safety Monitor consume them.  No layer above the HAL
- * ever references UART frames, GPIO pin numbers, or any peripheral detail.
- *
- * All queue transfers copy the full struct (pass-by-value) to prevent
- * dangling-pointer hazards (NFR-2, NFR-6).
- */
 
 #ifndef SYSTEM_EVENT_H
 #define SYSTEM_EVENT_H

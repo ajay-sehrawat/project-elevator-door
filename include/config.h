@@ -1,12 +1,3 @@
-/**
- * @file config.h
- * @brief System-wide compile-time constants with documented safety rationale.
- *
- * MISRA Rule 5.4 equivalent: Every numeric literal in the application is
- * replaced by a named constant defined here.  The safety rationale for each
- * timing value is documented inline.
- */
-
 #ifndef CONFIG_H
 #define CONFIG_H
 

@@ -1,14 +1,3 @@
-/**
- * @file logger/event_logger.c
- * @brief Asynchronous event logger (NFR-4, SRK-5).
- *
- * Logging is always fire-and-forget.  The Logger task runs at Priority 1
- * on Core 0 so it cannot block any safety-critical path.
- *
- * Stack monitoring: every STACK_REPORT_INTERVAL_MS, the Logger prints
- * uxTaskGetStackHighWaterMark() for all registered tasks (NFR-2).
- */
-
 #include <string.h>
 #include <stdio.h>
 

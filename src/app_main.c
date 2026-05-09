@@ -1,29 +1,3 @@
-/**
- * @file app_main.c
- * @brief System entry point — initialises all subsystems and spawns FreeRTOS tasks.
- *
- * Boot Sequence:
- *   1. nvs_flash_init()        — NVS must be ready before fault_nvs_open().
- *   2. fault_nvs_open()        — Open NVS namespace.
- *   3. fault_nvs_read()        — Check for persisted fault from previous session.
- *   4. logger_init()           — Logger queue must exist before any task logs.
- *   5. fsm_init()              — Creates FSM queue and mutex.
- *   6. safety_monitor_init()   — Resets comm watchdog timestamp.
- *   7. dispatcher_create_queue()
- *   8. hal_init()              — UART driver + TX queue.
- *   9. Task creation (pinned to correct cores as per specification).
- *  10. If persisted fault found: inject EVT_FAULT_PERSIST into FSM queue.
- *
- * Task Watchdog:
- *   esp_task_wdt_init() is called here.  The Safety Monitor task registers
- *   itself with the TWDT (esp_task_wdt_add) inside safety_monitor_task().
- *
- * Power Management:
- *   Active mode is enforced.  See hal_uart_mock.c for the rationale.
- *   pm_config.max_freq_mhz = pm_config.min_freq_mhz = 240 to prevent DVFS
- *   scaling from introducing timing jitter in safety loops.
- */
-
 #include <stdio.h>
 #include <string.h>
 

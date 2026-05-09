@@ -1,29 +1,3 @@
-/**
- * @file dispatcher/event_dispatcher.c
- * @brief Central event dispatcher — routes system_event_t to FSM & Safety Monitor.
- *
- * Design Rationale:
- *   The Dispatcher is the single consumer of the central queue.  It forwards
- *   events to:
- *     1. The FSM (door_fsm) via the same queue consumed inside fsm_control_task.
- *     2. The Safety Monitor via safety_monitor_* APIs (which are re-entrant).
- *
- *   In practice the FSM task and Dispatcher task BOTH block on the same central
- *   queue — this is intentional.  The Dispatcher's role is pre-filtering:
- *   it guards against queue-overflow cascades and provides a single point
- *   for audit logging before any consumer sees the event.
- *
- *   The simpler pattern used here is:
- *     - HAL pushes to `central_queue`.
- *     - Dispatcher task reads from `central_queue` and forwards to:
- *         * `fsm_queue`  (a secondary queue owned by the FSM task).
- *         * Safety Monitor (direct function call — safe because Safety task
- *           only *reads* shared state; it does not mutate it here).
- *
- *   This two-queue design keeps the FSM task fully decoupled from the HAL and
- *   isolates queue-overflow handling in one place.
- */
-
 #include <string.h>
 
 #include "freertos/FreeRTOS.h"
@@ -106,28 +80,8 @@ void dispatcher_task(void *pvParameters)
                     logger_log_queue_overflow(g_logger_queue, "fsm_queue");
                 }
             }
-
-            /*
-             * Safety Monitor gets first look at obstruction, SPOF, and
-             * timeout events so it can enforce SR-1..SR-7 independently
-             * of the FSM's response.
-             */
-            if (evt.type == EVT_OBSTRUCTION_DETECTED ||
-                evt.type == EVT_COMM_TIMEOUT         ||
-                evt.type == EVT_SPOF_DETECTED        ||
-                evt.type == EVT_MOTOR_STALL) {
-
-                /*
-                 * Safety Monitor reaction is handled inside safety_monitor_task
-                 * via the same FSM queue — the safety task re-posts a synthetic
-                 * event if it needs to override the FSM.  We do not call
-                 * safety-monitor functions here to avoid priority inversion
-                 * (the Dispatcher runs at Priority 4, Safety at Priority 5).
-                 * The Safety task will naturally preempt and handle first.
-                 */
             }
         }
-        /* If queue was empty (timeout), Dispatcher simply loops.
-         * The comm-timeout will be detected independently by the Safety Monitor. */
+
     }
 }

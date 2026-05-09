@@ -1,13 +1,3 @@
-/**
- * @file event_logger.h
- * @brief Asynchronous event logger (NFR-4).
- *
- * All state transitions, commands, queue overflows, and fault events are
- * logged via this module.  Logging is fire-and-forget from the caller's
- * perspective — it posts to a low-priority logger queue so it never blocks
- * safety-critical tasks (NFR-6).
- */
-
 #ifndef EVENT_LOGGER_H
 #define EVENT_LOGGER_H
 
